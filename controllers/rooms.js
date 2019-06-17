@@ -126,7 +126,8 @@ async function room_delete(request, response, next) {
 async function join_room(request, response, next) {
     console.log('User join room');
 
-    const { user_id, room_id } = request.body;
+    const room_id = request.params.id;
+    const user_id = request.body.user_id;
 
     try {
         const result = await pool.query('insert into RoomHasUsers(user_id, room_id) values($1, $2)',
@@ -146,7 +147,8 @@ async function join_room(request, response, next) {
 async function leave_room(request, response, next) {
     console.log('User leave room');
 
-    const { user_id, room_id } = request.body;
+    const room_id = request.params.id;
+    const user_id = request.body.user_id;
 
     try {
         const result = await pool.query('delete from RoomHasUsers where user_id = $1 and room_id = $2',
