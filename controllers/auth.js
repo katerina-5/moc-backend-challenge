@@ -8,29 +8,36 @@ module.exports = {
 async function login(request, response, next) {
     console.log('Registration for new users or login for existing ones');
 
-    const { user_name, password } = request.body;
+    let { user_name, password } = request.body;
 
     let hashPassword = await authLib.hashPassword(password, next);
 
-    const token = authLib.createJWToken({
-        user_name: user_name,
-        password: hashPassword
-    });
+    // const token = authLib.createJWToken({
+    //     user_name: user_name,
+    //     password: hashPassword
+    // });
+    // console.log(token);
 
-    // compare created token and credentials from database
+    let credentials = "";
+
+    let data = user_name.toString() + ":" + password.toString();
+    let buff = new Buffer(data);
+    let base64data = buff.toString('base64');
+
+    credentials = base64data;
 
     try {
         let user_id;
         // check token (credentials) in database
-        const checkUserName = await pool.query('select * from users where credentials = $1', [token]);
+        const checkUserName = await pool.query('select * from users where credentials = $1', [credentials]);
+
         if (checkUserName.rowCount === 0) {
             // registration
             const createUser = await pool.query('insert into users(user_name, password, credentials) values($1, $2, $3)',
-                [user_name, hashPassword, token]);
-            const getUserId = await pool.query('select user_id from users where credentials = $1', [token]);
+                [user_name, hashPassword, credentials]);
+            const getUserId = await pool.query('select user_id from users where credentials = $1', [credentials]);
 
             user_id = getUserId.rows[0].user_id;
-            credentials = token;
         } else {
             // authorization
             user_id = checkUserName.rows[0].user_id;
