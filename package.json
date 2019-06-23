@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "set NODE_PATH=.; && nodemon ./bin/www"
+    "start": "set NODE_PATH=.; && nodemon ./bin/www",
+    "build": "node ./bin/www"
   },
   "author": "Katherine Shevchenko",
   "license": "ISC",
