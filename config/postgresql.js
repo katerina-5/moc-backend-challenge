@@ -1,11 +1,12 @@
+require('dotenv').config();
 const Pool = require('pg').Pool;
 
 const pool = new Pool({
-    user: 'sctzeumi',
-    host: 'raja.db.elephantsql.com',
-    database: 'sctzeumi',
-    password: 'EDKbpcvBvMQqDf1Bca2bFIoDMSDgJpr4',
-    port: 5432
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_DEFAULT_DATABASE,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT
 });
 
 module.exports = {
